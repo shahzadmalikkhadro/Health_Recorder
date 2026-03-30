@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Health Recorder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar-wrapper">
+            <div class="sidebar-heading p-3">
+                <a href="dashboard4.html" class="navbar-brand fw-bold">
+                    <i class="fas fa-heartbeat text-primary me-2"></i>Health Recorder
+                </a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="dashboard4.html" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="add-reports.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-plus-circle me-2"></i>Add Report
+                </a>
+                <a href="view_reports.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-file-medical me-2"></i>View Reports
+                </a>
+                <a href="profile.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user me-2"></i>My Profile
+                </a>
+                <a href="#" class="list-group-item list-group-item-action text-danger" id="sidebarLogout">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+            
+            <!-- Storage Info -->
+            <div class="sidebar-footer p-3 mt-auto">
+                <div class="storage-info">
+                    <p class="small mb-1">Storage Used</p>
+                    <div class="progress mb-2">
+                        <div class="progress-bar" style="width: 45%">45%</div>
+                    </div>
+                    <p class="small mb-0 text-muted">2.3 GB of 5 GB used</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Top Bar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-sm" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="d-flex align-items-center ms-auto">
+                        <div class="dropdown me-3">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" 
+                                    data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger rounded-pill">3</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">New report uploaded</a></li>
+                                <li><a class="dropdown-item" href="#">Appointment reminder</a></li>
+                                <li><a class="dropdown-item" href="#">Storage alert</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" 
+                                    data-bs-toggle="dropdown">
+                                <img src="https://via.placeholder.com/32" class="rounded-circle me-2" 
+                                     alt="User" width="32" height="32">
+                                <span id="userName">Loading...</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="profile.html">
+                                    <i class="fas fa-user me-2"></i>Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="headerLogout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid p-4">
+                <!-- Welcome Section -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <h3 class="mb-1">Welcome back, <span id="welcomeName">User</span>!</h3>
+                        <p class="text-muted">Here's your health overview</p>
+                    </div>
+                    <div class="col-auto">
+                        <a href="add-reports.html" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Upload Report
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card bg-primary text-white">
+                            <div class="stats-icon">
+                                <i class="fas fa-file-medical-alt"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4 id="dashTotalReports">0</h4>
+                                <p class="mb-0">Total Reports</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card bg-success text-white">
+                            <div class="stats-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4 id="dashThisMonth">0</h4>
+                                <p class="mb-0">This Month</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card bg-info text-white">
+                            <div class="stats-icon">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4 id="dashHospitals">0</h4>
+                                <p class="mb-0">Hospitals</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card bg-warning text-white">
+                            <div class="stats-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4 id="dashDoctors">0</h4>
+                                <p class="mb-0">Doctors</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Reports & Quick Actions -->
+                <div class="row">
+                    <!-- Recent Reports -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Reports</h5>
+                                <a href="view_reports.html" class="btn btn-sm btn-outline-primary">
+                                    View All <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Report Name</th>
+                                                <th>Type</th>
+                                                <th>Date</th>
+                                                <th>Hospital</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentReportsBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { logoutUser, listenToAuthState } from './auth-supabase.js';
+        import { showToast } from './utils.js';
+        import { supabase } from './supabase.js';
+
+        listenToAuthState(async (authState) => {
+            if (!authState.isAuthenticated) {
+                window.location.href = '/login2.html';
+            } else {
+                const user = authState.user;
+                const displayName =
+                    user?.displayName || user?.email?.split('@')[0] || 'User';
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('welcomeName').textContent = displayName;
+                await loadDashboardStats(user.id);
+                await loadRecentReports(user.id);
+            }
+        });
+
+        async function loadDashboardStats(uid) {
+            try {
+                const { data: reports, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .eq('user_id', uid);
+
+                if (error) throw error;
+
+                const totalReports = reports.length;
+                const hospitals = new Set();
+                const doctors = new Set();
+                let thisMonthCount = 0;
+
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+
+                reports.forEach((d) => {
+                    if (d.hospital) hospitals.add(d.hospital);
+                    if (d.doctor) doctors.add(d.doctor);
+
+                    let reportDate = d.report_date;
+                    if (reportDate) {
+                        const rd = new Date(reportDate);
+                        if (
+                            !Number.isNaN(rd.getTime()) &&
+                            rd.getMonth() === currentMonth &&
+                            rd.getFullYear() === currentYear
+                        ) {
+                            thisMonthCount += 1;
+                        }
+                    }
+                });
+
+                document.getElementById('dashTotalReports').textContent =
+                    String(totalReports);
+                document.getElementById('dashHospitals').textContent = String(
+                    hospitals.size,
+                );
+                document.getElementById('dashDoctors').textContent = String(
+                    doctors.size,
+                );
+                document.getElementById('dashThisMonth').textContent = String(
+                    thisMonthCount,
+                );
+            } catch (error) {
+                console.warn('Failed to load dashboard stats', error);
+            }
+        }
+
+        async function loadRecentReports(uid) {
+            const tbody = document.getElementById('recentReportsBody');
+            tbody.innerHTML =
+                '<tr><td colspan="5" class="text-muted">Loading...</td></tr>';
+
+            try {
+                const { data: reports, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .eq('user_id', uid)
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+
+                if (error) throw error;
+
+                if (!reports || reports.length === 0) {
+                    tbody.innerHTML =
+                        '<tr><td colspan="5" class="text-muted">No reports yet. Upload your first report to see it here.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = reports
+                    .map(
+                        (report) =>
+                            `<tr>
+                        <td><strong>${report.title || 'N/A'}</strong></td>
+                        <td>${report.type || 'N/A'}</td>
+                        <td>${report.hospital || 'N/A'}</td>
+                        <td>${new Date(report.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <a href="${report.file_url}" target="_blank" class="text-decoration-none">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                        </td>
+                    </tr>`,
+                    )
+                    .join('');
+            } catch (error) {
+                console.warn('Failed to load reports', error);
+                tbody.innerHTML =
+                    '<tr><td colspan="5" class="text-danger">Failed to load reports</td></tr>';
+            }
+        }
+
+        async function handleLogout(e) {
+            e.preventDefault();
+            const result = await logoutUser();
+            if (result.success) {
+                showToast('Logged out successfully.', 'success');
+                window.location.href = '/login2.html';
+            } else {
+                showToast(result.message || 'Failed to logout.', 'error');
+            }
+        }
+        document.getElementById('sidebarLogout')?.addEventListener('click', handleLogout);
+        document.getElementById('headerLogout')?.addEventListener('click', handleLogout);
+
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('wrapper').classList.toggle('toggled');
+        });
+    </script>
+</body>
+</html>

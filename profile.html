@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Health Recorder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="sidebar" id="sidebar-wrapper">
+            <div class="sidebar-heading p-3">
+                <a href="dashboard4.html" class="navbar-brand fw-bold">
+                    <i class="fas fa-heartbeat text-primary me-2"></i>Health Recorder
+                </a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="dashboard4.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="add-reports.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-plus-circle me-2"></i>Add Report
+                </a>
+                <a href="view_reports.html" class="list-group-item list-group-item-action">
+                    <i class="fas fa-file-medical me-2"></i>View Reports
+                </a>
+                <a href="profile.html" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-user me-2"></i>My Profile
+                </a>
+                <a href="#" class="list-group-item list-group-item-action text-danger" id="sidebarLogout">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-sm" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="navbar-nav ms-auto">
+                        <a href="dashboard4.html" class="btn btn-sm btn-outline-primary me-2">
+                            <i class="fas fa-arrow-left me-1"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="profile-picture mb-3">
+                                    <img id="profilePhoto"
+                                         src="https://via.placeholder.com/150" 
+                                         class="rounded-circle" 
+                                         alt="Profile Picture"
+                                         width="150"
+                                         height="150">
+                                    <button class="btn btn-sm btn-outline-primary change-photo-btn" id="changePhotoBtn" type="button">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <input type="file" id="profilePhotoInput" accept="image/*" class="d-none">
+                                </div>
+                                
+                                <h4 class="mb-1" id="profileDisplayName">User</h4>
+                                <p class="text-muted mb-3" id="profileDisplayEmail">user@example.com</p>
+                                
+                                <div class="member-since mb-3" id="memberSince">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    Member since: -
+                                </div>
+                                
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <h5 class="mb-1" id="statReports">-</h5>
+                                        <small class="text-muted">Reports</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="mb-1" id="statHospitals">-</h5>
+                                        <small class="text-muted">Hospitals</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="mb-1" id="statMonths">-</h5>
+                                        <small class="text-muted">Months</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h6 class="card-title">Quick Links</h6>
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-shield-alt text-success me-2"></i>
+                                        Privacy Settings
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-bell text-warning me-2"></i>
+                                        Notification Settings
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <ul class="nav nav-tabs" id="profileTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#personal" type="button">
+                                    <i class="fas fa-user me-2"></i>Personal Info
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="medical-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#medical" type="button">
+                                    <i class="fas fa-heartbeat me-2"></i>Medical Info
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#security" type="button">
+                                    <i class="fas fa-shield-alt me-2"></i>Security
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content p-3 border border-top-0 rounded-bottom" id="profileTabContent">
+                            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                                <h5 class="mb-4">Personal Information</h5>
+                                <form id="personalForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalFirstName">First Name</label>
+                                            <input type="text" class="form-control" id="personalFirstName" placeholder="First name">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalLastName">Last Name</label>
+                                            <input type="text" class="form-control" id="personalLastName" placeholder="Last name">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalEmail">Email Address</label>
+                                            <input type="email" class="form-control" id="personalEmail" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalPhone">Phone Number</label>
+                                            <input type="tel" class="form-control" id="personalPhone" placeholder="Phone number">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalDob">Date of Birth</label>
+                                            <input type="date" class="form-control" id="personalDob">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="personalGender">Gender</label>
+                                            <select class="form-select" id="personalGender">
+                                                <option value="">Select gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="personalAddress">Address</label>
+                                        <textarea class="form-control" id="personalAddress" rows="3" placeholder="Home address"></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Save Changes
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="tab-pane fade" id="medical" role="tabpanel">
+                                <h5 class="mb-4">Medical Information</h5>
+                                <form id="medicalForm">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="medicalBloodGroup">Blood Group</label>
+                                        <select class="form-select" id="medicalBloodGroup">
+                                            <option value="">Select blood group</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="medicalAllergies">Allergies</label>
+                                        <textarea class="form-control" id="medicalAllergies" rows="3" placeholder="List any allergies..."></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="medicalConditions">Chronic Conditions</label>
+                                        <textarea class="form-control" id="medicalConditions" rows="3" placeholder="List any chronic conditions..."></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="medicalMedications">Current Medications</label>
+                                        <textarea class="form-control" id="medicalMedications" rows="3" placeholder="List current medications..."></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label" for="medicalPhysician">Primary Physician</label>
+                                        <input type="text" class="form-control" id="medicalPhysician" placeholder="Doctor's name">
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Save Medical Info
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="tab-pane fade" id="security" role="tabpanel">
+                                <h5 class="mb-4">Security Settings</h5>
+                                
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Change Password</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="changePasswordForm">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="currentPasswordInput">Current Password</label>
+                                                <input type="password" class="form-control" id="currentPasswordInput" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newPasswordInput">New Password</label>
+                                                <input type="password" class="form-control" id="newPasswordInput" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="confirmNewPasswordInput">Confirm New Password</label>
+                                                <input type="password" class="form-control" id="confirmNewPasswordInput" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                Update Password
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+        import { listenToAuthState, logoutUser } from './auth-supabase.js';
+        import { showToast } from './utils.js';
+
+        let currentUser = null;
+
+        listenToAuthState(async (authState) => {
+            if (!authState.isAuthenticated) {
+                window.location.href = 'login2.html';
+            } else {
+                currentUser = authState.user;
+                await loadUserProfile();
+                await loadStats();
+            }
+        });
+
+        async function loadUserProfile() {
+            try {
+                const { data: userData, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                let data = userData;
+
+                if (!data) {
+                    const { data: inserted, error: insertError } = await supabase
+                        .from('users')
+                        .upsert({
+                            id: currentUser.id,
+                            name: currentUser.user_metadata?.name || '',
+                            email: currentUser.email,
+                            avatar_url: null,
+                        }, { onConflict: 'id', returning: 'representation' });
+
+                    if (insertError) {
+                        throw insertError;
+                    }
+
+                    data = inserted?.[0] || {};
+                }
+
+                // Update currentUser data props from database
+                currentUser = {
+                    ...currentUser,
+                    ...data,
+                };
+
+                populateProfileCard(data);
+
+                const localPersonalData = localStorage.getItem(`healthRecorder_personal_${currentUser.id}`);
+                if (localPersonalData) {
+                    try {
+                        populatePersonalForm(JSON.parse(localPersonalData));
+                    } catch (err) {
+                        populatePersonalForm(data);
+                    }
+                } else {
+                    populatePersonalForm(data);
+                }
+
+                const localMedicalData = localStorage.getItem(`healthRecorder_medical_${currentUser.id}`);
+                if (localMedicalData) {
+                    try {
+                        populateMedicalForm(JSON.parse(localMedicalData));
+                    } catch (err) {
+                        populateMedicalForm(data);
+                    }
+                } else {
+                    populateMedicalForm(data);
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('Failed to load profile information.', 'error');
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const { data: reports, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+
+                const totalReports = reports.length;
+                const hospitals = new Set();
+                
+                reports.forEach((d) => {
+                    if (d.hospital) hospitals.add(d.hospital);
+                });
+
+                const { data: userData } = await supabase
+                    .from('users')
+                    .select('created_at')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                let months = '-';
+                if (userData?.created_at) {
+                    const start = new Date(userData.created_at);
+                    const now = new Date();
+                    months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
+                }
+
+                document.getElementById('statReports').textContent = String(totalReports);
+                document.getElementById('statHospitals').textContent = String(hospitals.size);
+                document.getElementById('statMonths').textContent = String(months);
+            } catch (error) {
+                console.warn('Failed to load stats', error);
+            }
+        }
+
+        async function safeUpsertUser(payload) {
+            const { data, error } = await supabase
+                .from('users')
+                .upsert(payload, { onConflict: 'id', returning: 'representation' });
+
+            if (error) {
+                if (error.code === '42703' || (error.message && error.message.toLowerCase().includes('column'))) {
+                    // The column might not exist in the current schema; keep local fallback
+                    return { data: null, error: null };
+                }
+                return { data: null, error };
+            }
+
+            return { data, error: null };
+        }
+
+        function populateProfileCard(data) {
+            const displayName = data.name || currentUser.user_metadata?.name || (currentUser.email ? currentUser.email.split('@')[0] : 'User');
+            const email = data.email || currentUser.email || 'user@example.com';
+
+            document.getElementById('profileDisplayName').textContent = displayName;
+            document.getElementById('profileDisplayEmail').textContent = email;
+
+            const memberSinceEl = document.getElementById('memberSince');
+            const createdAtVal = data.created_at || currentUser.created_at;
+            if (createdAtVal) {
+                const createdAt = new Date(createdAtVal);
+                if (!Number.isNaN(createdAt.getTime())) {
+                    const formatted = createdAt.toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'long',
+                    });
+                    memberSinceEl.innerHTML = '<i class="fas fa-calendar-alt me-1"></i>Member since: ' + formatted;
+                }
+            }
+
+            const photoURL = data.avatar_url || currentUser.avatar_url || currentUser.user_metadata?.avatar_url;
+
+            if (photoURL) {
+                document.getElementById('profilePhoto').src = photoURL;
+            } else {
+                document.getElementById('profilePhoto').src = 'https://via.placeholder.com/128?text=No+photo';
+            }
+        }
+
+        function populatePersonalForm(data) {
+            const name = data.name || currentUser.displayName || '';
+            const [firstName, ...rest] = name.split(' ');
+            const lastName = rest.join(' ');
+
+            document.getElementById('personalFirstName').value = firstName || '';
+            document.getElementById('personalLastName').value = lastName || '';
+            document.getElementById('personalEmail').value = data.email || currentUser.email || '';
+            document.getElementById('personalPhone').value = data.phone || '';
+            if (data.dob) {
+                document.getElementById('personalDob').value = data.dob;
+            }
+            if (data.gender) {
+                document.getElementById('personalGender').value = data.gender;
+            }
+            document.getElementById('personalAddress').value = data.address || '';
+        }
+
+        function populateMedicalForm(data) {
+            const bloodGroup = data.bloodGroup || data.blood_group || '';
+            const allergies = data.allergies || '';
+            const chronicConditions = data.chronicConditions || data.chronic_conditions || '';
+            const medications = data.currentMedications || data.current_medications || '';
+            const physician = data.primaryPhysician || data.primary_physician || '';
+
+            document.getElementById('medicalBloodGroup').value = bloodGroup;
+            document.getElementById('medicalAllergies').value = allergies;
+            document.getElementById('medicalConditions').value = chronicConditions;
+            document.getElementById('medicalMedications').value = medications;
+            document.getElementById('medicalPhysician').value = physician;
+        }
+
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('wrapper').classList.toggle('toggled');
+        });
+
+        async function handleLogout(e) {
+            e.preventDefault();
+            const result = await logoutUser();
+            if (result.success) {
+                showToast('Logged out successfully.', 'success');
+                window.location.href = 'login2.html';
+            } else {
+                showToast(result.message || 'Failed to logout.', 'error');
+            }
+        }
+        document.getElementById('sidebarLogout')?.addEventListener('click', handleLogout);
+
+        const changePhotoBtn = document.getElementById('changePhotoBtn');
+        const photoInput = document.getElementById('profilePhotoInput');
+        const photoImg = document.getElementById('profilePhoto');
+
+        changePhotoBtn.addEventListener('click', () => {
+            photoInput.click();
+        });
+
+        photoInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file.', 'warning');
+                return;
+            }
+            const sizeMb = file.size / 1024 / 1024;
+            if (sizeMb > 5) {
+                showToast('Profile photo must be smaller than 5 MB.', 'warning');
+                return;
+            }
+
+            if (!currentUser) return;
+
+            try {
+                const fileExt = file.name.split('.').pop();
+                const refPath = `${currentUser.id}/profile-photo.${fileExt}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('avatars')
+                    .upload(refPath, file, { upsert: true });
+
+                if (uploadError) throw uploadError;
+
+                const { data: publicUrlData, error: publicUrlError } = supabase.storage
+                    .from('avatars')
+                    .getPublicUrl(refPath);
+
+                if (publicUrlError) throw publicUrlError;
+
+                const publicUrl = publicUrlData?.publicUrl;
+                if (!publicUrl) throw new Error('Unable to retrieve public URL for the photo.');
+
+                const { data: updatedUser, error: updateError } = await supabase
+                    .from('users')
+                    .upsert(
+                        { id: currentUser.id, avatar_url: publicUrl },
+                        { onConflict: 'id', returning: 'representation' },
+                    );
+
+                if (updateError) throw updateError;
+
+                currentUser.avatar_url = publicUrl;
+
+                photoImg.src = publicUrl;
+                showToast('Profile photo updated.', 'success');
+            } catch (error) {
+                console.error('Error updating photo:', error);
+                showToast('Failed to update profile photo.', 'error');
+            }
+        });
+
+        document.getElementById('personalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const firstName = document.getElementById('personalFirstName').value.trim();
+            const lastName = document.getElementById('personalLastName').value.trim();
+            const fullName = `${firstName} ${lastName}`.trim();
+
+            try {
+                const updatePayload = {
+                    id: currentUser.id,
+                    name: fullName || null,
+                    email: currentUser.email,
+                    phone: document.getElementById('personalPhone').value.trim() || null,
+                    dob: document.getElementById('personalDob').value || null,
+                    gender: document.getElementById('personalGender').value || null,
+                    address: document.getElementById('personalAddress').value.trim() || null,
+                };
+
+                const { data, error } = await safeUpsertUser(updatePayload);
+
+                if (error) throw error;
+
+                showToast('Personal information updated.', 'success');
+
+                if (data && data[0]) {
+                    populateProfileCard(data[0]);
+                    populatePersonalForm(data[0]);
+                }
+
+                localStorage.setItem(`healthRecorder_personal_${currentUser.id}`, JSON.stringify({
+                    phone: updatePayload.phone,
+                    dob: updatePayload.dob,
+                    gender: updatePayload.gender,
+                    address: updatePayload.address,
+                }));
+            } catch (error) {
+                console.error('Error saving personal info:', error);
+                showToast('Failed to update personal information.', 'error');
+            }
+        });
+
+        document.getElementById('medicalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const bloodGroup = document.getElementById('medicalBloodGroup').value;
+            const allergies = document.getElementById('medicalAllergies').value.trim();
+            const chronicConditions = document.getElementById('medicalConditions').value.trim();
+            const medications = document.getElementById('medicalMedications').value.trim();
+            const physician = document.getElementById('medicalPhysician').value.trim();
+
+            try {
+                const updatePayload = {
+                    id: currentUser.id,
+                    blood_group: bloodGroup || null,
+                    allergies: allergies || null,
+                    chronic_conditions: chronicConditions || null,
+                    current_medications: medications || null,
+                    primary_physician: physician || null,
+                };
+
+                const { data, error } = await safeUpsertUser(updatePayload);
+
+                if (error) throw error;
+
+                showToast('Medical information updated.', 'success');
+                if (data && data[0]) {
+                    populateMedicalForm(data[0]);
+                }
+
+                localStorage.setItem(`healthRecorder_medical_${currentUser.id}`, JSON.stringify({
+                    bloodGroup,
+                    allergies,
+                    chronicConditions,
+                    medications,
+                    physician,
+                }));
+            } catch (error) {
+                console.error('Error saving medical info:', error);
+                showToast('Failed to update medical information.', 'error');
+            }
+        });
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPasswordInput').value;
+            const newPassword = document.getElementById('newPasswordInput').value;
+            const confirmPassword = document.getElementById('confirmNewPasswordInput').value;
+
+            if (!newPassword || newPassword.length < 6) {
+                showToast('New password must be at least 6 characters.', 'warning');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match.', 'warning');
+                return;
+            }
+
+            try {
+                const user = auth.currentUser;
+                if (!user || !user.email) {
+                    showToast('You must be logged in to change password.', 'error');
+                    return;
+                }
+
+                const credential = EmailAuthProvider.credential(user.email, currentPassword);
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, newPassword);
+                showToast('Password updated successfully.', 'success');
+
+                e.target.reset();
+            } catch (error) {
+                console.error('Error updating password:', error);
+                let msg = 'Failed to update password.';
+                if (error.code === 'auth/wrong-password') {
+                    msg = 'Current password is incorrect.';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'New password is too weak.';
+                }
+                showToast(msg, 'error');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
