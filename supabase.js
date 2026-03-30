@@ -1,10 +1,15 @@
 /**
  * Supabase configuration and initialization
+ * Credentials are loaded from environment variables for security
  */
 import { createClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = 'https://glnuukcfwjivrgclteec.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsbnV1a2Nmd2ppdnJnY2x0ZWVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3NjIyMTksImV4cCI6MjA5MDMzODIxOX0.c7gLhr5Nl-Vhv7ZwMFU4hOQ8e4ElVj6OSZblJeuXBY8'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('Missing Supabase environment variables. Please check your .env file.')
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
