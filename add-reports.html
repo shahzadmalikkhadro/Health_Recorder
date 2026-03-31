@@ -542,6 +542,8 @@
                 
                 if (error.message.includes('not authenticated')) {
                     errorMessage = 'You must be logged in to upload reports.';
+                } else if (error.message.includes('Bucket not found')) {
+                    errorMessage = 'Supabase storage bucket `reports` is missing. Create it in Storage first.';
                 } else if (error.message.includes('PostgreSQL')) {
                     errorMessage = 'Database error. Check your report data.';
                 } else if (error.message.includes('Upload failed')) {

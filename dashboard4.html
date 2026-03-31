@@ -268,6 +268,37 @@
             }
         }
 
+        async function openReportFile(report) {
+            try {
+                const storagePath = report.file_storage_path || report.fileStoragePath;
+                if (storagePath) {
+                    const { data, error } = await supabase.storage
+                        .from('reports')
+                        .createSignedUrl(storagePath, 60 * 60);
+
+                    if (error) throw error;
+                    if (data?.signedUrl) {
+                        window.open(data.signedUrl, '_blank', 'noopener');
+                        return;
+                    }
+                }
+
+                const directUrl = report.file_url || report.fileUrl;
+                if (directUrl) {
+                    window.open(directUrl, '_blank', 'noopener');
+                    return;
+                }
+
+                showToast('No file attached to this report.', 'warning');
+            } catch (error) {
+                console.warn('Failed to open report', error);
+                const message = error?.message?.includes('Bucket not found')
+                    ? 'Supabase storage bucket `reports` is missing or not configured correctly.'
+                    : 'Could not open this report file.';
+                showToast(message, 'error');
+            }
+        }
+
         async function loadRecentReports(uid) {
             const tbody = document.getElementById('recentReportsBody');
             tbody.innerHTML =
@@ -291,20 +322,31 @@
 
                 tbody.innerHTML = reports
                     .map(
-                        (report) =>
+                        (report, index) =>
                             `<tr>
                         <td><strong>${report.title || 'N/A'}</strong></td>
                         <td>${report.type || 'N/A'}</td>
                         <td>${report.hospital || 'N/A'}</td>
                         <td>${new Date(report.created_at).toLocaleDateString()}</td>
                         <td>
-                            <a href="${report.file_url}" target="_blank" class="text-decoration-none">
+                            <a href="#" data-report-index="${index}" class="text-decoration-none recent-view-report">
                                 <i class="fas fa-eye me-1"></i>View
                             </a>
                         </td>
                     </tr>`,
                     )
                     .join('');
+
+                tbody.querySelectorAll('.recent-view-report').forEach((link) => {
+                    link.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const reportIndex = Number(e.currentTarget.dataset.reportIndex);
+                        const report = reports[reportIndex];
+                        if (report) {
+                            await openReportFile(report);
+                        }
+                    });
+                });
             } catch (error) {
                 console.warn('Failed to load reports', error);
                 tbody.innerHTML =

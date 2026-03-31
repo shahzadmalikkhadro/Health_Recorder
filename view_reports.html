@@ -467,24 +467,37 @@
         }
 
         async function openReportFile(report) {
-            const directUrl = report.fileUrl || report.file_url;
-            if (directUrl) {
-                window.open(directUrl, '_blank', 'noopener');
-                return;
-            }
+            try {
+                const storagePath = report.fileStoragePath || report.file_storage_path;
+                if (storagePath) {
+                    const { data, error } = await supabase.storage
+                        .from('reports')
+                        .createSignedUrl(storagePath, 60 * 60);
 
-            const storagePath = report.fileStoragePath || report.file_storage_path;
-            if (storagePath) {
-                const { data } = supabase.storage.from('reports').getPublicUrl(storagePath);
-                const fallbackUrl = data?.publicUrl;
+                    if (error) {
+                        throw error;
+                    }
 
-                if (fallbackUrl) {
-                    window.open(fallbackUrl, '_blank', 'noopener');
+                    if (data?.signedUrl) {
+                        window.open(data.signedUrl, '_blank', 'noopener');
+                        return;
+                    }
+                }
+
+                const directUrl = report.fileUrl || report.file_url;
+                if (directUrl) {
+                    window.open(directUrl, '_blank', 'noopener');
                     return;
                 }
-            }
 
-            showToast('No file attached to this report.', 'warning');
+                showToast('No file attached to this report.', 'warning');
+            } catch (error) {
+                console.error('Error opening report file:', error);
+                const message = error?.message?.includes('Bucket not found')
+                    ? 'Supabase storage bucket `reports` is missing or not configured correctly.'
+                    : 'Could not open the report file. Please try again.';
+                showToast(message, 'error');
+            }
         }
 
         async function loadReports() {
@@ -619,9 +632,7 @@
             for (const report of pageItems) {
                 const { icon, label } = getTypeIcon(report.type);
                 const status = getStatusBadge(report.status);
-                const date =
-                    report.reportDate ||
-                    (report.createdAt?.toDate ? report.createdAt.toDate().toISOString().slice(0, 10) : '');
+                const date = getDisplayDate(report);
 
                 const col = document.createElement('div');
                 col.className = 'col-lg-4 col-md-6 mb-4';
@@ -712,9 +723,7 @@
             for (const report of pageItems) {
                 const { icon, label } = getTypeIcon(report.type);
                 const status = getStatusBadge(report.status);
-                const date =
-                    report.reportDate ||
-                    (report.createdAt?.toDate ? report.createdAt.toDate().toISOString().slice(0, 10) : '');
+                const date = getDisplayDate(report);
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
