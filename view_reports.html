@@ -72,25 +72,13 @@
 
                 <!-- Search and Stats -->
                 <div class="row mb-4">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-search"></i>
                             </span>
                             <input type="text" class="form-control" id="searchInput" placeholder="Search reports by name, hospital, or doctor...">
                             <button class="btn btn-outline-primary" id="searchButton">Search</button>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex justify-content-end">
-                            <div class="btn-group">
-                                <button class="btn btn-outline-secondary active" id="gridView">
-                                    <i class="fas fa-th-large"></i>
-                                </button>
-                                <button class="btn btn-outline-secondary" id="listView">
-                                    <i class="fas fa-list"></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -262,78 +250,6 @@
                     <!-- More Report Cards... -->
                 </div>
 
-                <!-- Reports List View (Hidden by default) -->
-                <div class="d-none" id="reportsListView">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Report Name</th>
-                                            <th>Type</th>
-                                            <th>Date</th>
-                                            <th>Hospital</th>
-                                            <th>Doctor</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <i class="fas fa-tint text-danger me-2"></i>
-                                                Complete Blood Count
-                                            </td>
-                                            <td><span class="badge bg-primary">Blood Test</span></td>
-                                            <td>Jan 15, 2024</td>
-                                            <td>City Hospital</td>
-                                            <td>Dr. Smith</td>
-                                            <td><span class="badge bg-success">Normal</span></td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-primary">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-outline-success">
-                                                        <i class="fas fa-download"></i>
-                                                    </button>
-                                                    <button class="btn btn-outline-info">
-                                                        <i class="fas fa-share"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <i class="fas fa-x-ray text-info me-2"></i>
-                                                Chest X-Ray
-                                            </td>
-                                            <td><span class="badge bg-info">X-Ray</span></td>
-                                            <td>Dec 28, 2023</td>
-                                            <td>Medical Center</td>
-                                            <td>Dr. Johnson</td>
-                                            <td><span class="badge bg-warning">Review Needed</span></td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-primary">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-outline-success">
-                                                        <i class="fas fa-download"></i>
-                                                    </button>
-                                                    <button class="btn btn-outline-info">
-                                                        <i class="fas fa-share"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Pagination -->
                 <nav aria-label="Page navigation" class="mt-4">
@@ -418,11 +334,7 @@
         let currentPage = 1;
         const PAGE_SIZE = 6;
 
-        const gridViewBtn = document.getElementById('gridView');
-        const listViewBtn = document.getElementById('listView');
         const reportsGridView = document.getElementById('reportsGridView');
-        const reportsListView = document.getElementById('reportsListView');
-        const listTbody = reportsListView.querySelector('tbody');
         const paginationEl = document.getElementById('pagination');
         const searchInput = document.getElementById('searchInput');
         const filterTypeSelect = document.getElementById('filterTypeSelect');
@@ -580,7 +492,6 @@
 
         function render() {
             renderGrid();
-            renderList();
             renderPagination();
         }
 
@@ -707,61 +618,6 @@
             }
         }
 
-        function renderList() {
-            const pageItems = paginate(filteredReports);
-            listTbody.innerHTML = '';
-
-            if (!pageItems.length) {
-                listTbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center text-muted">No reports found.</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            for (const report of pageItems) {
-                const { icon, label } = getTypeIcon(report.type);
-                const status = getStatusBadge(report.status);
-                const date = getDisplayDate(report);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <i class="${icon} me-2"></i>
-                        ${report.title || 'Untitled report'}
-                    </td>
-                    <td><span class="badge bg-secondary">${label}</span></td>
-                    <td>${date || '-'}</td>
-                    <td>${report.hospital || '-'}</td>
-                    <td>${report.doctor || '-'}</td>
-                    <td><span class="${status.className}">${status.label}</span></td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-primary view-report">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-success download-report">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-
-                tr.querySelector('.view-report').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openReportFile(report);
-                });
-
-                tr.querySelector('.download-report').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openReportFile(report);
-                });
-
-                listTbody.appendChild(tr);
-            }
-        }
-
         function renderPagination() {
             const totalPages = Math.max(1, Math.ceil(filteredReports.length / PAGE_SIZE));
             paginationEl.innerHTML = '';
@@ -801,21 +657,6 @@
                 ),
             );
         }
-
-        // Toggle between Grid and List view
-        gridViewBtn.addEventListener('click', function () {
-            reportsGridView.classList.remove('d-none');
-            reportsListView.classList.add('d-none');
-            this.classList.add('active');
-            listViewBtn.classList.remove('active');
-        });
-
-        listViewBtn.addEventListener('click', function () {
-            reportsGridView.classList.add('d-none');
-            reportsListView.classList.remove('d-none');
-            this.classList.add('active');
-            gridViewBtn.classList.remove('active');
-        });
 
         // Toggle sidebar
         document.getElementById('menu-toggle').addEventListener('click', () => {
