@@ -441,6 +441,52 @@
             }
         });
 
+        function normalizeReport(doc) {
+            return {
+                ...doc,
+                id: doc.id,
+                reportDate: doc.reportDate ?? doc.report_date ?? '',
+                createdAt: doc.createdAt ?? doc.created_at ?? null,
+                fileUrl: doc.fileUrl ?? doc.file_url ?? '',
+                fileName: doc.fileName ?? doc.file_name ?? '',
+                fileType: doc.fileType ?? doc.file_type ?? '',
+                fileSize: doc.fileSize ?? doc.file_size ?? null,
+                fileStoragePath: doc.fileStoragePath ?? doc.file_storage_path ?? '',
+                tags: Array.isArray(doc.tags) ? doc.tags : [],
+            };
+        }
+
+        function getDisplayDate(report) {
+            const rawDate =
+                report.reportDate || report.report_date || report.createdAt || report.created_at;
+
+            if (!rawDate) return '';
+
+            const parsed = new Date(rawDate);
+            return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
+        }
+
+        async function openReportFile(report) {
+            const directUrl = report.fileUrl || report.file_url;
+            if (directUrl) {
+                window.open(directUrl, '_blank', 'noopener');
+                return;
+            }
+
+            const storagePath = report.fileStoragePath || report.file_storage_path;
+            if (storagePath) {
+                const { data } = supabase.storage.from('reports').getPublicUrl(storagePath);
+                const fallbackUrl = data?.publicUrl;
+
+                if (fallbackUrl) {
+                    window.open(fallbackUrl, '_blank', 'noopener');
+                    return;
+                }
+            }
+
+            showToast('No file attached to this report.', 'warning');
+        }
+
         async function loadReports() {
             try {
                 const { data: reports, error } = await supabase
@@ -453,10 +499,7 @@
                     throw error;
                 }
 
-                allReports = reports.map((doc) => ({
-                    id: doc.id,
-                    ...doc,
-                }));
+                allReports = (reports || []).map(normalizeReport);
 
                 applyFilters();
             } catch (error) {
@@ -638,22 +681,14 @@
                 col.querySelectorAll('.view-report').forEach((btn) =>
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (report.fileUrl) {
-                            window.open(report.fileUrl, '_blank');
-                        } else {
-                            showToast('No file attached to this report.', 'warning');
-                        }
+                        openReportFile(report);
                     }),
                 );
 
                 col.querySelectorAll('.download-report').forEach((btn) =>
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (report.fileUrl) {
-                            window.open(report.fileUrl, '_blank');
-                        } else {
-                            showToast('No file attached to this report.', 'warning');
-                        }
+                        openReportFile(report);
                     }),
                 );
 
@@ -706,20 +741,12 @@
 
                 tr.querySelector('.view-report').addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (report.fileUrl) {
-                        window.open(report.fileUrl, '_blank');
-                    } else {
-                        showToast('No file attached to this report.', 'warning');
-                    }
+                    openReportFile(report);
                 });
 
                 tr.querySelector('.download-report').addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (report.fileUrl) {
-                        window.open(report.fileUrl, '_blank');
-                    } else {
-                        showToast('No file attached to this report.', 'warning');
-                    }
+                    openReportFile(report);
                 });
 
                 listTbody.appendChild(tr);
